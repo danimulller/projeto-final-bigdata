@@ -1,3 +1,4 @@
+import os
 import requests
 
 # Código de: https://gist.github.com/jonathansp/7491340, para testes com a API
@@ -7,7 +8,7 @@ class SPTransClient(object):
 
     session = requests.Session()
     url = 'http://api.olhovivo.sptrans.com.br/v2.1/'
-    token = '08396f83ad413243052fa0b764c1e1714116a474eceffc7e77cd96d0072c7d87'
+    token = os.getenv("TOKEN_SPTRANS")
 
     def auth(self, token):
 
