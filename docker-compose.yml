@@ -35,7 +35,7 @@ services:
     platform: linux/amd64
     container_name: minio
     entrypoint: sh
-    command:   '-c ''mkdir -p /minio_data/raw && mkdir -p /minio_data/trusted && minio server /minio_data --console-address ":9001"'''
+    command:   '-c ''mkdir -p /minio_data/raw && mkdir -p /minio_data/trusted && mkdir -p /minio_data/refined && minio server /minio_data --console-address ":9001"'''
     ports:
       - "9050:9000"
       - "9051:9001"
