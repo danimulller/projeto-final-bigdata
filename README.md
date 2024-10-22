@@ -4,13 +4,13 @@ Este repositório é o projeto final da disciplina de Engenharia de Dados.
 
 ## Inicializar o Ambiente
 
-Clone o respositório e execute o seguinte comando:
-
-```shell
-docker-compose up -d minio nifi
-```
+Clone o respositório e siga as instruções:
 
 ## Configurar o Nifi
+
+```shell
+docker-compose up -d nifi
+```
 
 1. Conecte-se ao Nifi via [http://localhost:49090/](http://localhost:49090/).
 2. Clique em `Upload Template` dentro do bloco `Operate`.
@@ -23,6 +23,10 @@ docker-compose up -d minio nifi
     - `token: SEU TOKEN EM https://www.sptrans.com.br/desenvolvedores/perfil-desenvolvedor/meus-aplicativos/`
 
 ## Configurar o Minio
+
+```shell
+docker-compose up -d minio
+```
 
 1. Acesse a interface do Minio em [http://localhost:9051](http://localhost:9051) e faça login com:
     - `admin`
@@ -39,12 +43,16 @@ docker-compose up -d minio nifi
 
 ## Configurar o Airflow
 
+```shell
+docker-compose build
+docker-compose up -d airflow-webserver
+```
+
 1. Execute os seguintes comandos:
-    - `docker-compose up -d airflow-scheduler airflow-worker`
-    - `docker-compose run --rm airflow-webserver airflow db init`
+    - `docker-compose build`
     - `docker-compose up -d airflow-webserver`
 2. - Crie um usuário Admin:
-    - `docker compose -f docker-compose.yml exec airflow-webserver bash`
+    - `docker exec -it airflow-webserver /bin/bash`
     - `airflow users create \
         --username admin \
         --firstname Firstname \

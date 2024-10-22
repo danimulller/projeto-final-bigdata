@@ -1,11 +1,25 @@
 from airflow import DAG
-from airflow.providers.amazon.aws.operators.s3 import S3ListBucketsOperator
 from airflow.utils.dates import days_ago
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.operators.python import PythonOperator
 
-# Defina a DAG
+# Função para listar os buckets usando boto3 através do S3Hook
+def list_buckets_minio(**kwargs):
+    s3_hook = S3Hook(aws_conn_id='s3_minio')
+    # Acessar o cliente boto3
+    s3_client = s3_hook.get_conn()
+    # Listar os buckets
+    buckets = s3_client.list_buckets()
+    bucket_names = [bucket['Name'] for bucket in buckets['Buckets']]
+    print(f"Buckets disponíveis: {bucket_names}")
+    return bucket_names
+
+# Configuração básica da DAG
 default_args = {
     'owner': 'airflow',
+    'depends_on_past': False,
     'start_date': days_ago(1),
+    'retries': 0
 }
 
 with DAG(
@@ -13,13 +27,12 @@ with DAG(
     default_args=default_args,
     schedule_interval=None,
     catchup=False,
-    tags=['minio', 's3'],
 ) as dag:
 
-    # Tarefa para listar os buckets no MinIO
-    list_buckets = S3ListBucketsOperator(
+    # Operador Python para listar os buckets
+    list_buckets_task = PythonOperator(
         task_id='list_buckets',
-        aws_conn_id='s3_minio',  # Nome da conexão S3 configurada no Airflow
+        python_callable=list_buckets_minio,
     )
 
-    list_buckets
+    list_buckets_task
