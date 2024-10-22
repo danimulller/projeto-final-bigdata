@@ -36,3 +36,27 @@ docker-compose up -d minio nifi
 
 1. Vá até a tela do Nifi, clique com o botão direito no fundo da tela e em `Start`.
 2. Se tudo estiver correto, os retornos .json devem aparecer dentro do bucket `raw` no Minio.
+
+## Configurar o Airflow
+
+1. Execute os seguintes comandos:
+    - `docker-compose up -d airflow-scheduler airflow-worker`
+    - `docker-compose run --rm airflow-webserver airflow db init`
+    - `docker-compose up -d airflow-webserver`
+2. - Crie um usuário Admin:
+    - `docker compose -f docker-compose.yml exec airflow-webserver bash`
+    - `airflow users create \
+        --username admin \
+        --firstname Firstname \
+        --lastname Lastname \
+        --role Admin \
+        --email admin@example.com \
+        --password admin`
+3. Conect-se ao Airflow em [http://localhost:58080](http://localhost:58080)
+4. Criando a conexão com o Minio:
+    - Clique em `Admin` -> `Connections` -> `+`
+    - `Connection Id: s3_minio`
+    - `Connection Type: Amazon Web Services`
+    - `AWS Access Key ID: datalake`
+    - `AWS Secret Access Key: datalake`
+    - `Extra: { "aws_access_key_id": "datalake", "aws_secret_access_key": "datalake", "host": "http://localhost:9050" }`
