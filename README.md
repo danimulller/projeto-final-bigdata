@@ -43,23 +43,20 @@ docker-compose up -d minio
 
 ## Configurar o Airflow
 
+1. Execute os seguintes comandos:
+
 ```shell
 docker-compose build
 docker-compose up -d airflow-webserver
 ```
 
-1. Execute os seguintes comandos:
-    - `docker-compose build`
-    - `docker-compose up -d airflow-webserver`
 2. - Crie um usuário Admin:
-    - `docker exec -it airflow-webserver /bin/bash`
-    - `airflow users create \
-        --username admin \
-        --firstname Firstname \
-        --lastname Lastname \
-        --role Admin \
-        --email admin@example.com \
-        --password admin`
+
+```shell
+docker exec -it airflow-webserver /bin/bash
+airflow users create --username admin --firstname Firstname --lastname Lastname --role Admin --email admin@example.com --password admin
+```
+
 3. Conect-se ao Airflow em [http://localhost:58080](http://localhost:58080)
 4. Criando a conexão com o Minio:
     - Clique em `Admin` -> `Connections` -> `+`
