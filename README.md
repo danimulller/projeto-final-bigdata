@@ -50,7 +50,7 @@ docker-compose build
 docker-compose up -d airflow-webserver
 ```
 
-2. - Crie um usuário Admin:
+2. Crie um usuário Admin:
 
 ```shell
 docker exec -it airflow-webserver /bin/bash
