@@ -12,6 +12,9 @@ x-airflow-common:
     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/airflow
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://admin:admin@db/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CORE__MINIO_ENDPOINT: http://minio:9000
+    AIRFLOW__CORE__MINIO_ACCESS_KEY: datalake
+    AIRFLOW__CORE__MINIO_SECRET_KEY: datalake
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
