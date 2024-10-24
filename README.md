@@ -64,4 +64,4 @@ airflow users create --username admin --firstname Firstname --lastname Lastname 
     - `Connection Type: Amazon Web Services`
     - `AWS Access Key ID: datalake`
     - `AWS Secret Access Key: datalake`
-    - `Extra: { "aws_access_key_id": "datalake", "aws_secret_access_key": "datalake", "host": "http://localhost:9050" }`
+    - `Extra: { "aws_access_key_id": "datalake", "aws_secret_access_key": "datalake", "host": "http://minio:9000" }`
