@@ -7,11 +7,9 @@ x-airflow-common:
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.7.3}
   environment:
     &airflow-common-env
-    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/airflow
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/airflow
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://admin:admin@db/airflow
-    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/admin
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/admin
     AIRFLOW__CORE__MINIO_ENDPOINT: http://minio:9000
     AIRFLOW__CORE__MINIO_ACCESS_KEY: datalake
     AIRFLOW__CORE__MINIO_SECRET_KEY: datalake
@@ -38,7 +36,7 @@ services:
     platform: linux/amd64
     container_name: minio
     entrypoint: sh
-    command:   '-c ''mkdir -p /minio_data/raw && mkdir -p /minio_data/trusted && mkdir -p /minio_data/refined && minio server /minio_data --console-address ":9001"'''
+    command: '-c ''mkdir -p /minio_data/raw && mkdir -p /minio_data/trusted && mkdir -p /minio_data/refined && minio server /minio_data --console-address ":9001"'''
     ports:
       - "9050:9000"
       - "9051:9001"
@@ -92,7 +90,6 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
-      - redis
       - db
       - airflow-scheduler
       - airflow-worker
@@ -112,7 +109,6 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
-      - redis
       - db
 
   airflow-worker:
@@ -134,7 +130,6 @@ services:
       <<: *airflow-common-env
       DUMB_INIT_SETSID: "0"
     depends_on:
-      - redis
       - db
 
   airflow-triggerer:
@@ -150,7 +145,6 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
-      - redis
       - db
 
   airflow-cli:
@@ -188,18 +182,6 @@ services:
 ############################
 ## DATABASE
 ############################
-  redis:
-    image: redis:latest
-    platform: linux/amd64
-    container_name: redis
-    hostname: redis
-    expose:
-      - 6379
-    ports:
-        - 6379:6379
-    volumes:
-      - ./util:/util
-
   # presto:
   #   platform: linux/amd64
   #   image: prestodb/presto
