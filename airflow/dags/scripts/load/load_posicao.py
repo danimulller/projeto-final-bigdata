@@ -2,15 +2,13 @@ import json
 from scripts.utils.constants.constants import Parameters
 from scripts.utils.api.boto_client import get_client
 
-def load_file_to_bucket(data: dict, file_name: str, folder: str, bucket='trusted') -> bool:
+def load_file_to_bucket(data: dict, file_name: str, folder: str, bucket: str) -> bool:
     try:
         # Configurações do cliente S3
         s3_client = get_client()
 
         # Convertendo o dicionário para uma string JSON
         json_data = json.dumps(data)
-
-        print(json_data)
         
         # Caminho do objeto no bucket
         object_name = f"{folder}{file_name}"

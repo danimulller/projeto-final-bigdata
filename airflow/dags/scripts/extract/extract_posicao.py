@@ -116,5 +116,6 @@ def extract_last_json(bucket = 'raw', root_folder = 'posicao/'):
     return {
         "name": nome_original + '.json',
         "folder": ultima_pasta,
-        "content": dict_conteudo
+        "content": dict_conteudo,
+        "type": 'json'
     }
