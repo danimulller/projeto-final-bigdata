@@ -19,6 +19,8 @@ def transform_from_raw(json: dict) -> dict:
     try:
         transformed_json = rename_json_columns(json, Parameters.MAP_COLUMNS)
 
+        # Transformar em parquet...
+
         return transformed_json
     except Exception as e:
         print(f"Erro ao transformar o arquivo JSON: {str(e)}")

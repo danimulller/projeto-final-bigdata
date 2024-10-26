@@ -12,7 +12,7 @@ def verificar_json_trusted(**kwargs) -> bool:
     dict_json_raw = ti.xcom_pull(task_ids='consultar_ultimo_arquivo')
 
     return check_bucket.check_file_bucket(
-        dict_json_raw['name'],
+        dict_json_raw['name'] + '.' + dict_json_raw['type'],
         dict_json_raw['folder'],
         Parameters.BUCKET_DESTINATION
     )
@@ -22,6 +22,8 @@ def transformar_json(**kwargs) -> dict:
 
     ti = kwargs['ti']
     dict_json_raw = ti.xcom_pull(task_ids='consultar_ultimo_arquivo')
+
+    print(dict_json_raw)
 
     # Caso o arquivo já exista, retorna
     if ti.xcom_pull(task_ids='verificar_arquivo_trusted'):
@@ -44,8 +46,9 @@ def enviar_trusted(**kwargs) -> bool:
 
     return load_file_to_bucket(
         data=dict_json_raw['content'],
-        file_name=dict_json_raw['name'],
+        file_name=dict_json_raw['name'] + '.' + dict_json_raw['type'],
         folder=dict_json_raw['folder'],
+        type=dict_json_raw['type'],
         bucket='trusted'
     )
 
