@@ -57,8 +57,14 @@ docker exec -it airflow-webserver /bin/bash
 airflow users create --username admin --firstname Firstname --lastname Lastname --role Admin --email admin@example.com --password admin
 ```
 
-3. Conect-se ao Airflow em [http://localhost:58080](http://localhost:58080)
-4. Criando a conexão com o Minio:
+3. Adicione acesso à pasta do Airflow:
+
+```shell
+sudo chmod -R 777 airflow/
+```
+
+4. Conect-se ao Airflow em [http://localhost:58080](http://localhost:58080)
+5. Criando a conexão com o Minio:
     - Clique em `Admin` -> `Connections` -> `+`
     - `Connection Id: s3_minio`
     - `Connection Type: Amazon Web Services`
