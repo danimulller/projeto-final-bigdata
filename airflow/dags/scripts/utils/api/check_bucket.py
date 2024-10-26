@@ -26,9 +26,6 @@ def check_file_bucket(file_name: str, folder: str, bucket: str = 'raw') -> bool:
 
         # O arquivo existe
         return True
-    except client.exceptions.NoSuchKey:
+    except:
         # O arquivo não existe
-        return False
-    except Exception as e:
-        print(e)
         return False

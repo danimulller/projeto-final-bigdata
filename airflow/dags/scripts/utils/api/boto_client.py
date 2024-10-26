@@ -1,6 +1,5 @@
 import boto3
 
-
 def get_client():
 
     s3_client = boto3.client(
