@@ -23,6 +23,8 @@ def load_file_to_bucket(data: dict, file_name: str, folder: str, bucket: str, ty
         # Envia o arquivo para o bucket
         s3_client.put_object(Bucket=bucket, Key=object_name, Body=json_data, ContentType=content_type)
 
+        print(f"Arquivo {file_name}.{type} foi carregado em {folder} no bucket {bucket}!")
+
         return True
     except Exception as e:
         print(f"Erro ao salvar o arquivo {file_name} no bucket {bucket}: {str(e)}")
