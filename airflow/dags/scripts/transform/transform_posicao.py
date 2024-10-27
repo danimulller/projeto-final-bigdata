@@ -1,6 +1,12 @@
+from io import BytesIO
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 from scripts.utils.constants.constants import Parameters
 
 def rename_json_columns(json_dict: dict, map_column: dict = Parameters.MAP_COLUMNS) -> dict:
+    """ Renomeia as colunas de um JSON """
+
     try:
         if isinstance(json_dict, dict):
             # Renomeia as chaves do dicionário atual
@@ -15,11 +21,26 @@ def rename_json_columns(json_dict: dict, map_column: dict = Parameters.MAP_COLUM
         print(f"Erro ao renomear as colunas do JSON: {str(e)}")
         raise
 
-def transform_from_raw(json: dict) -> dict:
+def convert_json_to_parquet(json_data: dict):
+    df = pd.DataFrame(json_data)
+
+    table = pa.Table.from_pandas(df)
+
+    # Armazenar o Parquet em memória
+    parquet_buffer = BytesIO()
+    pq.write_table(table, parquet_buffer)
+    
+    # Retornar o conteúdo do buffer em bytes
+    return parquet_buffer.getvalue()
+
+def transform_from_raw(json: dict):
+    """ Realiza as transformações da RAW para TRUSTED de Posicao """
+
     try:
         transformed_json = rename_json_columns(json, Parameters.MAP_COLUMNS)
 
-        # Transformar em parquet...
+        print("JSON:")
+        print(transformed_json)
 
         return transformed_json
     except Exception as e:

@@ -37,6 +37,8 @@ def extract_data_from_raw():
         extract_last_json()
 
 def extract_last_json(bucket = 'raw', root_folder = 'posicao/'):
+    """ Consulta o último arquivo JSON inserido no bucket """
+
     s3 = S3Hook(aws_conn_id="s3_minio")
     s3_client = get_client()
 

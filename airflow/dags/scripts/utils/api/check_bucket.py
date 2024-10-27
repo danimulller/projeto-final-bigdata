@@ -2,6 +2,7 @@ from scripts.utils.api.boto_client import get_client
 
 
 def is_bucket_empty(bucket_name: str) -> bool:
+    """ Verifica se o bucket está vazio """
 
     client = get_client()
     response = client.list_objects(Bucket=bucket_name)

@@ -18,16 +18,12 @@ def verificar_json_trusted(**kwargs) -> bool:
     )
 
 def transformar_json(**kwargs) -> dict:
-    """ Realiza transformações no JSON vindo da raw """
-
     ti = kwargs['ti']
     dict_json_raw = ti.xcom_pull(task_ids='consultar_ultimo_arquivo')
 
-    print(dict_json_raw)
-
     # Caso o arquivo já exista, retorna
     if ti.xcom_pull(task_ids='verificar_arquivo_trusted'):
-        print(f"File {dict_json_raw['name']} already exists in {dict_json_raw['folder']}! Returning...")
+        print(f"File {dict_json_raw['name']}.{dict_json_raw['type']} already exists in {dict_json_raw['folder']}! Returning...")
         return True
 
     return transform_from_raw(dict_json_raw['content'])
@@ -37,12 +33,13 @@ def enviar_trusted(**kwargs) -> bool:
     dict_json_raw = ti.xcom_pull(task_ids='consultar_ultimo_arquivo')
 
     if ti.xcom_pull(task_ids='verificar_arquivo_trusted'):
-        print(f"File {dict_json_raw['name']} already exists in {dict_json_raw['folder']}! Returning...")
+        print(f"File {dict_json_raw['name']}.{dict_json_raw['type']} already exists in {dict_json_raw['folder']}! Returning...")
         return True
 
     transformed_json = ti.xcom_pull(task_ids='transformar_arquivo')
 
     dict_json_raw['content'] = transformed_json
+    dict_json_raw['type'] = 'parquet'
 
     return load_file_to_bucket(
         data=dict_json_raw['content'],
