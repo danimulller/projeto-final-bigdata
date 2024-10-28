@@ -105,7 +105,6 @@
     <property>
         <name>fs.s3a.connection.ssl.enabled</name>
         <value>false</value>
-    </property>
-    
+    </property>   
     
 </configuration>

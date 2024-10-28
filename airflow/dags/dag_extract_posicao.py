@@ -60,8 +60,8 @@ default_args = {
 with DAG(
     "dag_extract_posicao",
     default_args=default_args,
-    # schedule_interval='* * * * *',  # Executa a cada 1 minuto
-    schedule_interval=None, # Execução manual
+    schedule_interval='* * * * *',  # Executa a cada 1 minuto
+    # schedule_interval=None, # Execução manual
     catchup=False,
 ) as dag:
 
