@@ -1,7 +1,10 @@
+from datetime import datetime
 from io import BytesIO
+import json
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
+import pytz
 from scripts.utils.constants.constants import Parameters
 
 def rename_json_columns(json_dict: dict, map_column: dict = Parameters.MAP_COLUMNS) -> dict:
@@ -33,14 +36,48 @@ def convert_json_to_parquet(json_data: dict):
     # Retornar o conteúdo do buffer em bytes
     return parquet_buffer.getvalue()
 
+def model_json(json_data: dict) -> dict:
+    row = {}
+    result = []
+    for linha in json_data['linhas']:
+        for veiculo in linha['veiculos']:
+            row = {
+                "letreiro": linha['letreiro'],
+                "codigo_linha": linha['codigo_linha'],
+                "sentido_operacao": linha['sentido_operacao'],
+                "letreiro_destino": linha['letreiro_destino'],
+                "letreiro_origem": linha['letreiro_origem'],
+                "prefixo": veiculo['prefixo'],
+                "acessivel": veiculo['acessivel'],
+                "horario": convert_date_to_brazil(veiculo['horario']),
+                "latitude": veiculo['latitude'],
+                "longitude": veiculo['longitude']
+            }
+            result.append(row)
+
+    result_json = json.dumps(result, ensure_ascii=False)
+
+    return result_json
+
+def convert_date_to_brazil(date: str) -> str:
+    data_utc = datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
+    data_utc = data_utc.replace(tzinfo=pytz.UTC)
+
+    # Converter para o fuso horário de Brasília
+    fuso_brasilia = pytz.timezone("America/Sao_Paulo")
+    data_brasilia = data_utc.astimezone(fuso_brasilia)
+
+    # Formatar para o formato brasileiro
+    data_brasileira = data_brasilia.strftime("%d/%m/%Y %H:%M:%S")
+
+    return data_brasileira
+
 def transform_from_raw(json: dict):
     """ Realiza as transformações da RAW para TRUSTED de Posicao """
 
     try:
         transformed_json = rename_json_columns(json, Parameters.MAP_COLUMNS)
-
-        print("JSON:")
-        print(transformed_json)
+        transformed_json = model_json(transformed_json)
 
         return transformed_json
     except Exception as e:

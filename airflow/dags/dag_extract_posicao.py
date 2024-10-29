@@ -41,11 +41,13 @@ def enviar_trusted(**kwargs) -> bool:
     dict_json_raw['content'] = transformed_json
     dict_json_raw['type'] = 'parquet'
 
+    print(dict_json_raw)
+
     return load_file_to_bucket(
         data=dict_json_raw['content'],
         file_name=dict_json_raw['name'] + '.' + dict_json_raw['type'],
         folder=dict_json_raw['folder'],
-        type=dict_json_raw['type'],
+        file_type=dict_json_raw['type'],
         bucket='trusted'
     )
 
@@ -60,8 +62,8 @@ default_args = {
 with DAG(
     "dag_extract_posicao",
     default_args=default_args,
-    schedule_interval='* * * * *',  # Executa a cada 1 minuto
-    # schedule_interval=None, # Execução manual
+    # schedule_interval='* * * * *',  # Executa a cada 1 minuto
+    schedule_interval=None, # Execução manual
     catchup=False,
 ) as dag:
 
