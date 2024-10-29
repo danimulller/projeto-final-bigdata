@@ -68,7 +68,7 @@ def convert_date_to_brazil(date: str) -> str:
     data_brasilia = data_utc.astimezone(fuso_brasilia)
 
     # Formatar para o formato brasileiro
-    data_brasileira = data_brasilia.strftime("%d/%m/%Y %H:%M:%S")
+    data_brasileira = data_brasilia.strftime("%Y-%m-%d %H:%M:%S")
 
     return data_brasileira
 
