@@ -130,7 +130,7 @@ services:
     depends_on:
       - db
       - airflow-scheduler
-      - airflow-worker
+      # - airflow-worker
     command: >
       bash -c "airflow db init && airflow webserver"
 
@@ -149,26 +149,26 @@ services:
     depends_on:
       - db
 
-  airflow-worker:
-    <<: *airflow-common
-    container_name: airflow-worker
-    platform: linux/amd64
-    hostname: airflow-worker
-    command: celery worker
-    healthcheck:
-      # yamllint disable rule:line-length
-      test:
-        - "CMD-SHELL"
-        - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-    environment:
-      <<: *airflow-common-env
-      DUMB_INIT_SETSID: "0"
-    depends_on:
-      - db
+  # airflow-worker:
+  #   <<: *airflow-common
+  #   container_name: airflow-worker
+  #   platform: linux/amd64
+  #   hostname: airflow-worker
+  #   command: celery worker
+  #   healthcheck:
+  #     # yamllint disable rule:line-length
+  #     test:
+  #       - "CMD-SHELL"
+  #       - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 30s
+  #   environment:
+  #     <<: *airflow-common-env
+  #     DUMB_INIT_SETSID: "0"
+  #   depends_on:
+  #     - db
 
   airflow-triggerer:
     <<: *airflow-common
@@ -282,7 +282,7 @@ services:
        - ./hive/conf:/hive_custom_conf
        - ./util:/util
     command: >
-      sh -c "pkill -f hiveserver2 || true && 
+      sh -c "pkill -f hiveserver2 && 
             start-hive"
           
   metastore:
