@@ -105,6 +105,28 @@
     <property>
         <name>fs.s3a.connection.ssl.enabled</name>
         <value>false</value>
-    </property>   
+    </property>
+    <property>
+        <name>hive.metastore.schema.verification</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.autoCreateSchema</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.autoCreateTables</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.fixedDatastore</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.autoCreateAll</name>
+        <value>true</value>
+        <description>creates necessary schema on a startup if one doesnt exist.</description>
+    </property>
+
     
 </configuration>

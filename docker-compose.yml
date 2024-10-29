@@ -49,6 +49,44 @@ services:
     volumes:
       - ./minio/data1:/data
 
+  namenode:
+    image: fjardim/mds-namenode
+    platform: linux/amd64
+    container_name: namenode
+    hostname: namenode
+    volumes:
+      - ./hadoop/hdfs/namenode:/hadoop/dfs/name
+      - ./hadoop/util:/util
+    env_file:
+      - ./hadoop/hadoop.env
+    ports:
+      - "9870:9870"
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+
+  datanode:
+    image: fjardim/mds-datanode
+    platform: linux/amd64
+    container_name: datanode
+    hostname: datanode
+    volumes:
+      - ./hadoop/hdfs/datanode:/hadoop/dfs/data
+      - ./hadoop/util:/util
+    env_file:
+      - ./hadoop/hadoop.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
+    depends_on:
+      - namenode
+    ports:
+      - "9864:9864"
+    deploy:
+      resources:
+        limits:
+          memory: 500m
+
 ############################
 ## INGESTAO
 ############################
@@ -243,6 +281,9 @@ services:
     volumes:
        - ./hive/conf:/hive_custom_conf
        - ./util:/util
+    command: >
+      sh -c "pkill -f HiveServer2 || true && 
+            start-hive"
           
   metastore:
     hostname: metastore
@@ -258,7 +299,7 @@ services:
       #SERVICE_OPTS: "-Dhive.metastore.uris=thrift://metastore:9083" 
       IS_RESUME: "true"
       DB_DRIVER: postgres
-      SERVICE_OPTS: "-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://db:5432/metastore -Djavax.jdo.option.ConnectionUserName=admin -Djavax.jdo.option.ConnectionPassword=admin" 
+      SERVICE_OPTS: "-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://db:5432/admin -Djavax.jdo.option.ConnectionUserName=admin -Djavax.jdo.option.ConnectionPassword=admin" 
     ports:
        - "9083:9083"
     depends_on:

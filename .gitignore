@@ -1,4 +1,4 @@
-.env
+*.env
 .DS_Store*
 __pycache__/
 .*
@@ -6,3 +6,11 @@ __pycache__/
 airflow/logs
 __init__py
 .Identifier
+*.meta
+*.lock
+blk*
+edits*
+fsimage*
+*txid
+dfs*
+*.cursor
