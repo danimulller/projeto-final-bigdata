@@ -282,7 +282,7 @@ services:
        - ./hive/conf:/hive_custom_conf
        - ./util:/util
     command: >
-      sh -c "pkill -f HiveServer2 || true && 
+      sh -c "pkill -f hiveserver2 || true && 
             start-hive"
           
   metastore:
