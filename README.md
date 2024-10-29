@@ -71,3 +71,42 @@ sudo chmod -R 777 airflow/
     - `AWS Access Key ID: datalake`
     - `AWS Secret Access Key: datalake`
     - `Extra: { "aws_access_key_id": "datalake", "aws_secret_access_key": "datalake", "host": "http://minio:9000" }`
+
+## Configurar o Hive
+
+1. Execute o seguinte comando:
+
+```shell
+docker-compose up -d hive datanode
+```
+
+2. Entre no DBeaver e crie uma conexão Apache Hive:
+    - `Host: localhost`
+    - `Porta: 1000`
+    - `Nome de Usuário: datalake`
+    - `Senha: datalake`
+
+3. Abra um script SQL e crie a conexão com a pasta `posicao` do Minio:
+
+```sql
+CREATE EXTERNAL TABLE posicao (
+  	letreiro STRING,
+	codigo_linha INT,
+	sentido_operacao INT,
+	letreiro_destino STRING,
+	letreiro_origem STRING,
+	prefixo INT,
+	acessivel BOOLEAN,
+	horario STRING,
+	latitude FLOAT,
+	longitude FLOAT
+)
+STORED AS PARQUET
+LOCATION 's3a://trusted/posicao/';
+```
+
+4. Teste a conexão:
+
+```sql
+SELECT * FROM default.posicao LIMIT 10
+```
