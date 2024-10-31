@@ -8,8 +8,8 @@ x-airflow-common:
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/admin
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db/admin
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db_airflow/admin
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin@db_airflow/admin
     AIRFLOW__CORE__MINIO_ENDPOINT: http://minio:9000
     AIRFLOW__CORE__MINIO_ACCESS_KEY: datalake
     AIRFLOW__CORE__MINIO_SECRET_KEY: datalake
@@ -128,7 +128,7 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
-      - db
+      - db-airflow
       - airflow-scheduler
       # - airflow-worker
     command: >
@@ -147,7 +147,7 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
-      - db
+      - db-airflow
 
   # airflow-worker:
   #   <<: *airflow-common
@@ -183,7 +183,7 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
-      - db
+      - db-airflow
 
   airflow-cli:
     <<: *airflow-common
@@ -220,27 +220,26 @@ services:
 ############################
 ## DATABASE
 ############################
-  # presto:
-  #   platform: linux/amd64
-  #   image: prestodb/presto
-  #   hostname: presto
-  #   container_name: presto
-  #   volumes: 
-  #     - ./presto/etc/catalog:/opt/presto-server/etc/catalog/
-  #     - ./presto/etc/catalog:/opt/presto/etc/catalog/
-  #     - ./presto/etc/catalog:/etc/catalog/ 
-  #     - ./presto/etc/hadoop:/hadoop 
-  #     - ./util:/util
-  #   ports:
-  #     - 18080:8080
-  #   depends_on:
-  #     - hive
-
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 2g
-  #         #cpus: '0.2'
+  presto:
+    platform: linux/amd64
+    image: prestodb/presto
+    hostname: presto
+    container_name: presto
+    volumes: 
+      - ./presto/etc/catalog:/opt/presto-server/etc/catalog/
+      - ./presto/etc/catalog:/opt/presto/etc/catalog/
+      - ./presto/etc/catalog:/etc/catalog/ 
+      - ./presto/etc/hadoop:/hadoop 
+      - ./util:/util
+    ports:
+      - 18080:8080
+    depends_on:
+      - hive
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+          #cpus: '0.2'
   
   db:
     image: postgres
@@ -256,6 +255,22 @@ services:
       - 15432:5432
     volumes:
       - ./postgres/volume:/var/lib/postgresql/data
+      - ./util:/util
+
+  db-airflow:
+    image: postgres
+    platform: linux/amd64
+    container_name: db_airflow
+    hostname: db_airflow
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: admin
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200 -c wal_level=logical
+    ports:
+      - 25432:5432
+    volumes:
+      - ./postgres-airflow/volume:/var/lib/postgresql/data
       - ./util:/util
 
   hive:
@@ -312,27 +327,27 @@ services:
 ############################
 ## VISUALIZACAO
 ############################
-  # metabase:
-  #     image: metabase/metabase:latest
-  #     platform: linux/amd64
-  #     container_name: metabase
-  #     hostname: metabase
-  #     ports:
-  #       - 3000:3000
-  #     depends_on:
-  #       - db
-  #     environment:
-  #       MB_DB_TYPE: postgres
-  #       MB_DB_DBNAME: metabase
-  #       MB_DB_PORT: 5432
-  #       MB_DB_PASS: admin
-  #       MB_DB_USER: admin
-  #       MB_DB_HOST: db
-  #       MB_PASSWORD_COMPLEXITY: "weak"
-  #       MB_PASSWORD_LENGTH: 4
-  #       #user user@datalab.com.br pass datalab
-  #     volumes:
-  #       - ./util:/util
+  metabase:
+      image: metabase/metabase:latest
+      platform: linux/amd64
+      container_name: metabase
+      hostname: metabase
+      ports:
+        - 3000:3000
+      depends_on:
+        - db
+      environment:
+        MB_DB_TYPE: postgres
+        MB_DB_DBNAME: admin
+        MB_DB_PORT: 5432
+        MB_DB_PASS: admin
+        MB_DB_USER: admin
+        MB_DB_HOST: db
+        MB_PASSWORD_COMPLEXITY: "weak"
+        MB_PASSWORD_LENGTH: 4
+        #user user@datalab.com.br pass datalab
+      volumes:
+        - ./util:/util
 
 #############################
 ## GENERAL
