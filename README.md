@@ -92,24 +92,42 @@ docker-compose up -d hive datanode
 3. Abra um script SQL e crie a conexão com a pasta `posicao` do Minio:
 
 ```sql
-CREATE EXTERNAL TABLE posicao (
+CREATE DATABASE IF NOT EXISTS sp_trans LOCATION 's3a://trusted/';
+```
+
+```sql
+CREATE EXTERNAL TABLE sp_trans.posicao (
   	letreiro STRING,
-	codigo_linha INT,
-	sentido_operacao INT,
+	codigo_linha BIGINT,
+	sentido_operacao BIGINT,
 	letreiro_destino STRING,
 	letreiro_origem STRING,
-	prefixo INT,
+	prefixo BIGINT,
 	acessivel BOOLEAN,
 	horario STRING,
-	latitude FLOAT,
-	longitude FLOAT
+	latitude DOUBLE,
+	longitude DOUBLE
 )
+PARTITIONED BY (ano string, mes string, dia string, hora string)
 STORED AS PARQUET
 LOCATION 's3a://trusted/posicao/';
 ```
 
-4. Teste a conexão:
-
 ```sql
-SELECT * FROM default.posicao LIMIT 10
+MSCK REPAIR TABLE sp_trans.posicao;
 ```
+
+## Configurar Presto e Metabase
+
+1. Execute o seguinte comando:
+
+```shell
+docker-compose up -d presto metabase
+```
+
+2. Conect-se ao Metabase em [http://localhost:3000](http://localhost:3000)
+3. Configure a conexão do Metabase com o Presto:
+    - `Host: presto`
+    - `Porta: 8080`
+    - `Nome de Usuário: hive`
+    - `Schema: sp_trans`
