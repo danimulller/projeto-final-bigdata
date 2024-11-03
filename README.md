@@ -25,7 +25,8 @@ docker-compose up -d nifi
     - `url: http://api.olhovivo.sptrans.com.br/v2.1/`
     - `token: SEU TOKEN EM https://www.sptrans.com.br/desenvolvedores/perfil-desenvolvedor/meus-aplicativos/`
 
-![nifi](https://github.com/user-attachments/assets/dd509862-cf7c-4e5e-b012-606032e92531)
+![fluxo_nifi](https://github.com/user-attachments/assets/912e84e4-50f0-473d-aeaf-fb774d4b3940)
+
 
 ## Configurar o Minio
 
