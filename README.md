@@ -79,6 +79,8 @@ sudo chmod -R 777 airflow/
     - `AWS Secret Access Key: datalake`
     - `Extra: { "aws_access_key_id": "datalake", "aws_secret_access_key": "datalake", "host": "http://minio:9000" }`
 
+![airflow](https://github.com/user-attachments/assets/1f6f19d7-dc25-4b65-a281-6925e5f8a620)
+
 ## Configurar o Hive
 
 1. Execute o seguinte comando:
