@@ -273,6 +273,22 @@ services:
       - ./postgres-airflow/volume:/var/lib/postgresql/data
       - ./util:/util
 
+  db-metabase:
+    image: postgres
+    platform: linux/amd64
+    container_name: db_metabase
+    hostname: db_metabase
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: admin
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200 -c wal_level=logical
+    ports:
+      - 35432:5432
+    volumes:
+      - ./postgres-metabase/volume:/var/lib/postgresql/data
+      - ./util:/util
+
   hive:
     hostname: hive
     #image: apache/hive:4.0.0-beta-1
@@ -297,8 +313,7 @@ services:
        - ./hive/conf:/hive_custom_conf
        - ./util:/util
     command: >
-      sh -c "pkill -f hiveserver2 && 
-            start-hive"
+      sh -c "pkill -f HiveServer2 || true && sleep 2 && start-hive"
           
   metastore:
     hostname: metastore
@@ -335,14 +350,14 @@ services:
       ports:
         - 3000:3000
       depends_on:
-        - db
+        - db-metabase
       environment:
         MB_DB_TYPE: postgres
         MB_DB_DBNAME: admin
         MB_DB_PORT: 5432
         MB_DB_PASS: admin
         MB_DB_USER: admin
-        MB_DB_HOST: db
+        MB_DB_HOST: db_metabase
         MB_PASSWORD_COMPLEXITY: "weak"
         MB_PASSWORD_LENGTH: 4
         #user user@datalab.com.br pass datalab
