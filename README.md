@@ -25,6 +25,8 @@ docker-compose up -d nifi
     - `url: http://api.olhovivo.sptrans.com.br/v2.1/`
     - `token: SEU TOKEN EM https://www.sptrans.com.br/desenvolvedores/perfil-desenvolvedor/meus-aplicativos/`
 
+![nifi](https://github.com/user-attachments/assets/dd509862-cf7c-4e5e-b012-606032e92531)
+
 ## Configurar o Minio
 
 ```shell
@@ -38,6 +40,8 @@ docker-compose up -d minio
     - `Acess Key: datalake`
     - `Secret Key: datalake`
 3. Clique em `Create`:
+
+![minio](https://github.com/user-attachments/assets/e84bc812-ac92-4da9-8b2c-f933363d318b)
 
 ## Testando a conexão
 
