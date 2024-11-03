@@ -3,7 +3,7 @@
 Este repositório é o projeto final da disciplina de Engenharia de Dados.
 
 ## Arquitetura dos Dados
-![arquitetura](https://github.com/user-attachments/assets/3c378656-7a07-439e-821a-fe4b62944f7a)
+![Captura de tela 2024-11-03 184539](https://github.com/user-attachments/assets/3fef8925-f561-44de-bc0b-0900d1fee394)
 
 ## Inicializar o Ambiente
 
