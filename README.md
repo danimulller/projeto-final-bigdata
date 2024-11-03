@@ -140,3 +140,5 @@ docker-compose up -d presto metabase
     - `Porta: 8080`
     - `Nome de Usuário: hive`
     - `Schema: sp_trans`
+
+![metabase](https://github.com/user-attachments/assets/7d3b0831-88c9-4498-96ee-2db9363f05c6)
