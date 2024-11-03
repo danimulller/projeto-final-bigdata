@@ -124,6 +124,8 @@ LOCATION 's3a://trusted/posicao/';
 MSCK REPAIR TABLE sp_trans.posicao;
 ```
 
+![hive](https://github.com/user-attachments/assets/27b16f8b-6e8b-43a6-975f-6f290b04b7a8)
+
 ## Configurar Presto e Metabase
 
 1. Execute o seguinte comando:
