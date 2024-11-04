@@ -1,9 +1,10 @@
-# Laboratório Airflow
+# Laboratório Projeto de Engenharia de Dados - SPTrans
 
 Este repositório é o projeto final da disciplina de Engenharia de Dados.
 
 ## Arquitetura dos Dados
-![Captura de tela 2024-11-03 184539](https://github.com/user-attachments/assets/3fef8925-f561-44de-bc0b-0900d1fee394)
+![Captura de tela 2024-11-04 204749](https://github.com/user-attachments/assets/68a9c002-24a7-405e-b13f-c605bcd103ee)
+
 
 ## Inicializar o Ambiente
 
